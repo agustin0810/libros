@@ -10,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
 @Entity
@@ -19,12 +20,16 @@ public class Biblioteca {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column
+    @Column(unique=true)
     private String direccion;
 
     @JsonIgnore
     @OneToMany(mappedBy = "biblioteca")
     private Set<Libro> libros = new HashSet<>();
+
+    @ManyToMany
+    private Set<Cliente> clientes;
+
 
     public int getId() {
         return id;
@@ -50,7 +55,7 @@ public class Biblioteca {
         this.libros = libros;
     }
 
-    public Biblioteca(int id, String direccion, Set<Libro> libros) {
+    public Biblioteca(int id, String direccion, Set<Libro> libros, Set<Cliente> clientes) {
         this.id = id;
         this.direccion = direccion;
         this.libros = libros;
@@ -58,5 +63,13 @@ public class Biblioteca {
 
     public Biblioteca(){
         
+    }
+
+    public Set<Cliente> getClientes() {
+        return clientes;
+    }
+
+    public void setClientes(Set<Cliente> clientes) {
+        this.clientes = clientes;
     }
 }

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.practrel.practrel.Entity.Biblioteca;
 import com.practrel.practrel.Entity.Libro;
@@ -19,7 +21,8 @@ import com.practrel.practrel.Repository.LibroRepository;
 
 @Controller
 @CrossOrigin(origins = "http://localhost:3000")
-public class MainController {
+@RequestMapping("/libro")
+public class LibroController {
     
     @Autowired
     private BibliotecaRepository bibliotecaRepository;
@@ -27,16 +30,7 @@ public class MainController {
     @Autowired
     private LibroRepository libroRepository;
 
-    @PostMapping("/biblioteca")
-    public ResponseEntity<?> altaBiblioteca(@RequestBody Biblioteca biblioteca){
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(bibliotecaRepository.save(biblioteca));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Problema interno en el servidor");
-        }
-    }
-
-    @PostMapping("/libro")
+    @PostMapping
     public ResponseEntity<?> altaLibro(@RequestBody Libro libro){
         try {
             return ResponseEntity.status(HttpStatus.OK).body(libroRepository.save(libro));
@@ -45,17 +39,7 @@ public class MainController {
         }
     }
 
-    @PutMapping("/biblioteca")
-    public ResponseEntity<?> modificacionBiblioteca(@RequestBody Biblioteca biblioteca){
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(bibliotecaRepository.save(biblioteca));
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Problema interno en el servidor");
-        }
-    }
-
-    @PutMapping("/libro")
+    @PutMapping
     public ResponseEntity<?> modificacionLibro(@RequestBody Libro libro){
         try {
             return ResponseEntity.status(HttpStatus.OK).body(libroRepository.save(libro));
@@ -65,18 +49,7 @@ public class MainController {
         }
     }
 
-    @DeleteMapping("/biblioteca/{id}")
-    public ResponseEntity<?> eliminacionBiblioteca(@PathVariable int id){
-        try {
-            bibliotecaRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.OK).body("Eliminado");
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Problema interno en el servidor");
-        }
-    }
-
-    @DeleteMapping("/libro/{codLibro}")
+    @DeleteMapping("/{codLibro}")
     public ResponseEntity<?> eliminacionLibro(@PathVariable int codLibro){
         try {
             libroRepository.deleteById(codLibro);
@@ -86,18 +59,8 @@ public class MainController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Problema interno en el servidor");
         }
     }
-
-    @GetMapping("/biblioteca/{id}")
-    public ResponseEntity<?> conseguirBiblioteca(@PathVariable int id){
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(bibliotecaRepository.findById(id));
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Problema interno en el servidor");
-        }
-    }
-
-    @GetMapping("/libro/{codLibro}")
+    
+    @GetMapping("/{codLibro}")
     public ResponseEntity<?> conseguirLibro(@PathVariable int codLibro){
         try {
             return ResponseEntity.status(HttpStatus.OK).body(libroRepository.findById(codLibro));
@@ -107,20 +70,19 @@ public class MainController {
         }
     }
 
-    @GetMapping("/biblioteca")
-    public ResponseEntity<?> conseguirBibliotecas(){
+    @GetMapping
+    public ResponseEntity<?> conseguirLibros(){
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(bibliotecaRepository.findAll());
+            return ResponseEntity.status(HttpStatus.OK).body(libroRepository.findAll());
         }
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Problema interno en el servidor");
         }
     }
-
-    @GetMapping("/libro")
-    public ResponseEntity<?> conseguirLibros(){
+    @GetMapping("/filtrarPorTitulo")
+    public ResponseEntity<?> conseguirLibroPorTitulo(@RequestParam String titulo){
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(libroRepository.findAll());
+            return ResponseEntity.status(HttpStatus.OK).body(libroRepository.findByTitulo(titulo));
         }
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Problema interno en el servidor");
